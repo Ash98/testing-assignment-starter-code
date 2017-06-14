@@ -47,6 +47,14 @@ public class SolutionIT {
         };
     }
 
+    private static void deleteAllWhipbirds() {
+        List<WebElement> deleteButtons = driver.findElements(By.className("delete-whipbird-button"));
+        for (WebElement deleteButton :
+                deleteButtons) {
+            deleteButton.click();
+        }
+    }
+
     private static void logIn(Boolean withValidCredentials) {
         String email = withValidCredentials ? validEmail : invalidEmail;
         String password = withValidCredentials ? validPassword : invalidPassword;
@@ -130,6 +138,7 @@ public class SolutionIT {
         driver = new ChromeDriver();
         wait = new WebDriverWait(driver, 10);
 
+
     }
 
     @AfterClass
@@ -166,17 +175,18 @@ public class SolutionIT {
     public void notLoggedIn_checkCurrentPage() {
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/login");
         assertTitleEquals("whipbird: log in");
-        assertElementTextEquals(By.tagName("h4"),"Log in");
-        assertElementTextEquals(By.id("footer-right"),"");
+        assertElementTextEquals(By.tagName("h4"), "Log in");
+        assertElementTextEquals(By.id("footer-right"), "");
     }
 
     // Step 3
     @Test
     public void notLoggedIn_clickAboutMenu() {
+        wait.until(presenceOfElementLocated(By.id(aboutMenuId)));
         driver.findElement(By.id(aboutMenuId)).click();
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/about");
         assertTitleEquals("whipbird: about");
-        assertElementTextEquals(By.tagName("h4"),"About this app");
+        assertElementTextEquals(By.tagName("h4"), "About this app");
     }
 
     // Step 4
@@ -189,8 +199,8 @@ public class SolutionIT {
         assertElementNotPresent(myWhipbirdsMenuId);
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/login");
         assertTitleEquals("whipbird: log in");
-        assertElementTextEquals(By.id(popupMessageId),"Username or password incorrect");
-        assertElementTextEquals(By.id("footer-right"),"");
+        assertElementTextEquals(By.id(popupMessageId), "Username or password incorrect");
+        assertElementTextEquals(By.id("footer-right"), "");
     }
 
     // --------- WHEN LOGGED IN ---------
@@ -211,8 +221,8 @@ public class SolutionIT {
         logIn(true);
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/my-whipbirds");
         assertTitleEquals("whipbird: my whipbirds");
-        assertElementTextEquals(By.tagName("h4"),"Current whipbirds for Ashley Burnett");
-        assertElementTextEquals(By.id("footer-right"),"Ashley Burnett");
+        assertElementTextEquals(By.tagName("h4"), "Current whipbirds for Ashley Burnett");
+        assertElementTextEquals(By.id("footer-right"), "Ashley Burnett");
     }
 
     // Step 7
@@ -220,10 +230,12 @@ public class SolutionIT {
     public void loggedIn_clickLogOutMenu() {
         logIn(true);
 
+        wait.until(presenceOfElementLocated(By.id(logOutMenuId)));
         driver.findElement(By.id(logOutMenuId)).click();
+
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/logout");
         assertTitleEquals("whipbird: log out");
-        assertElementTextEquals(By.tagName("h4"),"Log out");
+        assertElementTextEquals(By.tagName("h4"), "Log out");
 
     }
 
@@ -231,16 +243,46 @@ public class SolutionIT {
     @Test
     public void loggedIn_addNewWhipbird() {
         logIn(true);
+
+        deleteAllWhipbirds();
+
+        wait.until(presenceOfElementLocated(By.id("name")));
         driver.findElement(By.id("name")).sendKeys("Bob");
-        driver.findElement(By.id("age")).sendKeys((int)(Math.random()*100)+"");
+
+        wait.until(presenceOfElementLocated(By.id("age")));
+        driver.findElement(By.id("age")).sendKeys((int) (Math.random() * 100) + "");
+
+        wait.until(presenceOfElementLocated(By.id("add-new-whipbird-button")));
         driver.findElement(By.id("add-new-whipbird-button")).click();
-        assertElementTextEquals(By.id(popupMessageId),"Whipbird added: Bob");
+
+        assertElementTextEquals(By.id(popupMessageId), "Whipbird added: Bob");
     }
 
     // Step 9
     @Test
     public void loggedIn_addNewWhipbirdThenDeleteIt() {
-       
+        logIn(true);
+        deleteAllWhipbirds();
+
+        wait.until(presenceOfElementLocated(By.id("name")));
+        driver.findElement(By.id("name")).sendKeys("Daisy");
+
+        wait.until(presenceOfElementLocated(By.id("age")));
+        driver.findElement(By.id("age")).sendKeys((int) (Math.random() * 100) + "");
+
+
+        wait.until(presenceOfElementLocated(By.id("add-new-whipbird-button")));
+        driver.findElement(By.id("add-new-whipbird-button")).click();
+
+
+        driver.navigate().refresh();
+
+        wait.until(presenceOfElementLocated(By.className("delete-whipbird-button")));
+
+        driver.findElement(By.className("delete-whipbird-button")).click();
+
+        assertElementTextEquals(By.id(popupMessageId), "Whipbird deleted: Daisy");
+
 
     }
 }
