@@ -225,7 +225,6 @@ public class SolutionIT {
         assertTitleEquals("whipbird: log out");
         assertElementTextEquals(By.tagName("h4"),"Log out");
         driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
-        // TODO
     }
 
     // Step 8
