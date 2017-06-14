@@ -290,6 +290,8 @@ public class SolutionIT {
 
         assertElementTextEquals(By.id(popupMessageId), "Whipbird deleted: Daisy");
 
+        wait.until(presenceOfElementLocated(By.id("no-whipbirds-saved")));
+        assertElementTextEquals(By.id("no-whipbirds-saved"), "You don't have any whipbirds saved yet.");
 
     }
 }
