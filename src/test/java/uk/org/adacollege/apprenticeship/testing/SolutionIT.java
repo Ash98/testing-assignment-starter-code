@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -127,7 +128,8 @@ public class SolutionIT {
     public static void beforeAll() {
         startUrl = "http://whipbird.mattcalthrop.com/";
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, 5);
+        wait = new WebDriverWait(driver, 10);
+
     }
 
     @AfterClass
@@ -171,12 +173,10 @@ public class SolutionIT {
     // Step 3
     @Test
     public void notLoggedIn_clickAboutMenu() {
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.findElement(By.id(aboutMenuId)).click();
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/about");
         assertTitleEquals("whipbird: about");
         assertElementTextEquals(By.tagName("h4"),"About this app");
-        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
     }
 
     // Step 4
@@ -219,23 +219,28 @@ public class SolutionIT {
     @Test
     public void loggedIn_clickLogOutMenu() {
         logIn(true);
-        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+
         driver.findElement(By.id(logOutMenuId)).click();
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/logout");
         assertTitleEquals("whipbird: log out");
         assertElementTextEquals(By.tagName("h4"),"Log out");
-        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
+
     }
 
     // Step 8
     @Test
     public void loggedIn_addNewWhipbird() {
-        // TODO
+        logIn(true);
+        driver.findElement(By.id("name")).sendKeys("Bob");
+        driver.findElement(By.id("age")).sendKeys((int)(Math.random()*100)+"");
+        driver.findElement(By.id("add-new-whipbird-button")).click();
+        assertElementTextEquals(By.id(popupMessageId),"Whipbird added: Bob");
     }
 
     // Step 9
     @Test
     public void loggedIn_addNewWhipbirdThenDeleteIt() {
-        // TODO
+       
+
     }
 }
