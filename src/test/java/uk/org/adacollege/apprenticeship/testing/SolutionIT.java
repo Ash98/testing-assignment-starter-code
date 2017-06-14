@@ -49,10 +49,12 @@ public class SolutionIT {
 
     private static void deleteAllWhipbirds() {
         List<WebElement> deleteButtons = driver.findElements(By.className("delete-whipbird-button"));
+
         for (WebElement deleteButton :
                 deleteButtons) {
             deleteButton.click();
         }
+
     }
 
     private static void logIn(Boolean withValidCredentials) {
@@ -184,6 +186,7 @@ public class SolutionIT {
     public void notLoggedIn_clickAboutMenu() {
         wait.until(presenceOfElementLocated(By.id(aboutMenuId)));
         driver.findElement(By.id(aboutMenuId)).click();
+
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/about");
         assertTitleEquals("whipbird: about");
         assertElementTextEquals(By.tagName("h4"), "About this app");
@@ -193,10 +196,12 @@ public class SolutionIT {
     @Test
     public void notLoggedIn_logInWithIncorrectCredentials() {
         logIn(false);
+
         assertElementPresent(logInMenuId);
         assertElementNotPresent(logOutMenuId);
         assertElementPresent(aboutMenuId);
         assertElementNotPresent(myWhipbirdsMenuId);
+
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/login");
         assertTitleEquals("whipbird: log in");
         assertElementTextEquals(By.id(popupMessageId), "Username or password incorrect");
@@ -209,6 +214,7 @@ public class SolutionIT {
     @Test
     public void loggedIn_checkMenus() {
         logIn(true);
+
         assertElementPresent(myWhipbirdsMenuId);
         assertElementPresent(aboutMenuId);
         assertElementPresent(logOutMenuId);
@@ -219,6 +225,7 @@ public class SolutionIT {
     @Test
     public void loggedIn_checkCurrentPage() {
         logIn(true);
+
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/my-whipbirds");
         assertTitleEquals("whipbird: my whipbirds");
         assertElementTextEquals(By.tagName("h4"), "Current whipbirds for Ashley Burnett");
@@ -262,6 +269,7 @@ public class SolutionIT {
     @Test
     public void loggedIn_addNewWhipbirdThenDeleteIt() {
         logIn(true);
+
         deleteAllWhipbirds();
 
         wait.until(presenceOfElementLocated(By.id("name")));
@@ -278,7 +286,6 @@ public class SolutionIT {
         driver.navigate().refresh();
 
         wait.until(presenceOfElementLocated(By.className("delete-whipbird-button")));
-
         driver.findElement(By.className("delete-whipbird-button")).click();
 
         assertElementTextEquals(By.id(popupMessageId), "Whipbird deleted: Daisy");
