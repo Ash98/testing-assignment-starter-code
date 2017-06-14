@@ -3,6 +3,7 @@ package uk.org.adacollege.apprenticeship.testing;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.*;
+import org.junit.rules.Timeout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -217,6 +218,13 @@ public class SolutionIT {
     // Step 7
     @Test
     public void loggedIn_clickLogOutMenu() {
+        logIn(true);
+        driver.manage().timeouts().implicitlyWait(3,TimeUnit.SECONDS);
+        driver.findElement(By.id(logOutMenuId)).click();
+        assertUrlEquals("http://whipbird.mattcalthrop.com/#!/logout");
+        assertTitleEquals("whipbird: log out");
+        assertElementTextEquals(By.tagName("h4"),"Log out");
+        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
         // TODO
     }
 
