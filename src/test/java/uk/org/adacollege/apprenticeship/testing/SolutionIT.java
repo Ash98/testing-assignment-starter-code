@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class SolutionIT {
@@ -169,17 +170,26 @@ public class SolutionIT {
     // Step 3
     @Test
     public void notLoggedIn_clickAboutMenu() {
-
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.findElement(By.id(aboutMenuId)).click();
         assertUrlEquals("http://whipbird.mattcalthrop.com/#!/about");
         assertTitleEquals("whipbird: about");
         assertElementTextEquals(By.tagName("h4"),"About this app");
+        driver.manage().timeouts().implicitlyWait(0,TimeUnit.SECONDS);
     }
 
     // Step 4
     @Test
     public void notLoggedIn_logInWithIncorrectCredentials() {
-        // TODO
+        logIn(false);
+        assertElementPresent(logInMenuId);
+        assertElementNotPresent(logOutMenuId);
+        assertElementPresent(aboutMenuId);
+        assertElementNotPresent(myWhipbirdsMenuId);
+        assertUrlEquals("http://whipbird.mattcalthrop.com/#!/login");
+        assertTitleEquals("whipbird: log in");
+        assertElementTextEquals(By.id(popupMessageId),"Username or password incorrect");
+        assertElementTextEquals(By.id("footer-right"),"");
     }
 
     // --------- WHEN LOGGED IN ---------
