@@ -282,9 +282,6 @@ public class SolutionIT {
         wait.until(presenceOfElementLocated(By.id("add-new-whipbird-button")));
         driver.findElement(By.id("add-new-whipbird-button")).click();
 
-
-        driver.navigate().refresh();
-
         wait.until(presenceOfElementLocated(By.className("delete-whipbird-button")));
         driver.findElement(By.className("delete-whipbird-button")).click();
 
